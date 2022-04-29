@@ -1,13 +1,15 @@
-from flask import Flask
+from http.server import HTTPServer, BaseHTTPRequestHandler
 import subprocess
-app = Flask(__name__)
+class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
-@app.route('/')
-def main():
-    subprocess.call(['sh', './Ping.sh'])
-    return '4-check ping, saved to out.txt'
+    # определяем метод `do_GET` 
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b'Wait pls')
+        subprocess.call(['sh', './Ping.sh'])
 
-@app.route('out.txt')
-def show_output():
-    with open('out.txt') as f:
-        return f.read()
+
+
+httpd = HTTPServer(('localhost', 80), SimpleHTTPRequestHandler)
+httpd.serve_forever()
