@@ -1,0 +1,1 @@
+ping youtube.com -c 4 > out.txt
